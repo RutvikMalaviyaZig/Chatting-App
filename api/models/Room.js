@@ -1,56 +1,30 @@
 "use strict";
 const { DataTypes } = require("sequelize");
-const sequelize = require("../../../config/database");
-const Board = require("../../models/board/Board");
+const sequelize = require("../../config/database");
+const Message = require('./Message');
+const RoomUser = require('./RoomUser');
+const User = require('./User')
 
-const Room  = sequelize.define(
+const Room = sequelize.define(
   "Room",
   {
     id: {
       type: DataTypes.UUID,
       allowNull: false,
       primaryKey: true,
-      defaultValue: DataTypes.UUIDV4, 
+      defaultValue: DataTypes.UUIDV4,
     },
-    firstName: {
+    name: {
       type: DataTypes.STRING,
-      allowNull: true,
-    },
-    lastName: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    email: {
-      type: DataTypes.STRING,
-      unique: true,
       allowNull: false,
-      validate: {
-        notNull: { msg: "Email is required" },
-        notEmpty: { msg: "Email is required" },
-        isEmail: { msg: "Invalid email" },
+    },
+    createdBy: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: "User",
+        key: "id",
       },
-    },
-    mobile: {
-      type: DataTypes.STRING,
-      unique: true,
-      allowNull: true,
-      validate: {
-        len: { args: [10, 10], msg: "Mobile number must be 10 digits" },
-      },
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    resetToken: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      field: "reset_token",
-    },
-    resetTokenExpiry: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      field: "reset_token_expiry",
     },
     createdAt: {
       allowNull: false,
@@ -71,6 +45,9 @@ const Room  = sequelize.define(
   }
 );
 
+Room.hasMany(Message, { foreignKey: "roomId" });
 
+Room.belongsToMany(User, { through: RoomUser, foreignKey: "roomId" });
+User.belongsToMany(Room, { through: RoomUser, foreignKey: "userId" });
 
 module.exports = Room;

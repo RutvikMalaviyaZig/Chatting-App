@@ -1,7 +1,8 @@
 "use strict";
 const { DataTypes } = require("sequelize");
-const sequelize = require("../../../config/database");
-const Board = require("../../models/board/Board");
+const sequelize = require("../../config/database");
+const RoomUser = require("./RoomUser");
+const Room = require("./Room");
 
 const User = sequelize.define(
   "User",
@@ -12,13 +13,13 @@ const User = sequelize.define(
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4, 
     },
-    firstName: {
+    name: {
       type: DataTypes.STRING,
-      allowNull: true,
-    },
-    lastName: {
-      type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
+      validate: {
+        notNull: { msg: "Name is required" },
+        notEmpty: { msg: "Name is required" },
+      },
     },
     email: {
       type: DataTypes.STRING,
@@ -30,27 +31,9 @@ const User = sequelize.define(
         isEmail: { msg: "Invalid email" },
       },
     },
-    mobile: {
-      type: DataTypes.STRING,
-      unique: true,
-      allowNull: true,
-      validate: {
-        len: { args: [10, 10], msg: "Mobile number must be 10 digits" },
-      },
-    },
     password: {
       type: DataTypes.STRING,
       allowNull: true,
-    },
-    resetToken: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      field: "reset_token",
-    },
-    resetTokenExpiry: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      field: "reset_token_expiry",
     },
     createdAt: {
       allowNull: false,
@@ -71,5 +54,7 @@ const User = sequelize.define(
   }
 );
 
+User.belongsToMany(Room, { through: RoomUser, foreignKey: "userId" });
+Room.belongsToMany(User, { through: RoomUser, foreignKey: "roomId" });
 
 module.exports = User;

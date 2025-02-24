@@ -1,7 +1,8 @@
 "use strict";
 const { DataTypes } = require("sequelize");
-const sequelize = require("../../../config/database");
-
+const sequelize = require("../../config/database");
+const Room = require('./Room');
+const User = require('./User');
 
 const Message = sequelize.define(
   "Message",
@@ -12,9 +13,34 @@ const Message = sequelize.define(
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4, 
     },
-   
-    description:{
-        type: DataTypes.STRING
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    createdBy: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: "User",
+        key: "id",
+      },
+    },
+    roomId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: "Room",
+        key: "id",
+      },
+    },
+    isRead: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    fileUrl: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     createdAt: {
       allowNull: false,
@@ -24,7 +50,6 @@ const Message = sequelize.define(
       allowNull: false,
       type: DataTypes.DATE,
     },
-    
   },
   {
     freezeTableName: true,
@@ -33,5 +58,7 @@ const Message = sequelize.define(
   }
 );
 
+Message.belongsTo(Room, { foreignKey: "roomId" });
+Message.belongsTo(User, { foreignKey: "createdBy" });
 
-module.exportsMessage;
+module.exports = Message;
