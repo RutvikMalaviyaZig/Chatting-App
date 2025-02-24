@@ -2,7 +2,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../../config/database");
 const Message = require("./Message");
-const RoomUser = require("./RoomUser");
+// const RoomUser = require("./RoomUser");
 const User = require("./User");
 
 const Room = sequelize.define(

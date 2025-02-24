@@ -4,7 +4,7 @@ const router = express.Router();
 
 const RoomController = require('../../controllers/chatController/RoomController')
 
-const { verifyAuthMiddleware } = require('../../middlewares/VerfiyAuthMIddleware')
+const { verifyAuthMiddleware } = require('../../middleware/verfiyAuthMIddleware')
 
 
 router.use(verifyAuthMiddleware)

@@ -2,15 +2,15 @@ const bcrypt = require("bcrypt");
 const { generateToken } = require("../../utils/Jwts");
 const HTTP_STATUS_CODE = require("../../utils/HttpStatusCodes");
 const MESSAGES = require("../../utils/Messages");
-const User = require("../../models/user/Users");
+const User = require("../../models/User");
 
 // function for the signup
 const handleSignup = async (req, res) => {
-  const { firstName, lastName, email, password, mobile } = req.body;
+  const { name, email, password, mobile } = req.body;
 
   try {
     // validate all fields are require
-    if (!firstName || !lastName || !email || !password || !mobile) {
+    if (!name || !email || !password || !mobile) {
       return res
         .status(HTTP_STATUS_CODE.BAD_REQUEST)
         .json(MESSAGES.ALL_FIELDS_REQUIRED);
@@ -22,8 +22,7 @@ const handleSignup = async (req, res) => {
 
     // select all fields for create user in database
     const userData = {
-      firstName,
-      lastName,
+      name,
       email,
       mobile,
       password: hashPassword,

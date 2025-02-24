@@ -1,7 +1,7 @@
 "use strict";
 const { DataTypes } = require("sequelize");
 const sequelize = require("../../config/database");
-const RoomUser = require("./RoomUser");
+// const RoomUser = require("./RoomUser");
 const Room = require("./Room");
 
 const User = sequelize.define(
