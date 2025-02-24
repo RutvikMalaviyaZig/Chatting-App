@@ -3,12 +3,6 @@ const Messages = require("../../utils/Messages");
 
 const Room = require("../../models/Room");
 
-const {express} = require('../../utils/Constants')
-const app = express();
-
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
-
 module.exports = {
 
     
@@ -48,15 +42,6 @@ module.exports = {
           error: "",
         });
       }
-
-      io.on('connection', function(socket, roomId){
-
-        socket.on('join room', (roomId)=>{
-            socket.join(roomId);
-        })
-
-        socket.broadcast.to(roomId).emit('connectToRoom', "You are in room which one id is : " +roomId);
-     })
      
     } catch (error) {
       res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
@@ -84,16 +69,6 @@ module.exports = {
         });
       }
 
-      io.on('disconnect', function(socket, id){
-
-        socket.on('leave room', (id)=>{
-            socket.leave(id);
-        })
-
-        io.sockets.in(id).emit('connectToRoom', "You are in room which one id is : " +id);
-     })
-
-
     } catch (error) {
         res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
             status: HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR,
@@ -103,6 +78,4 @@ module.exports = {
           });
     }
   }
-
-
 };

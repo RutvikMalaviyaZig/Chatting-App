@@ -54,7 +54,12 @@ const User = sequelize.define(
   }
 );
 
-User.belongsToMany(Room, { through: RoomUser, foreignKey: "userId" });
-Room.belongsToMany(User, { through: RoomUser, foreignKey: "roomId" });
+
+User.hasMany(Room, {
+  foreignKey : "senderId",
+})
+Room.belongsTo(User, {
+  foreignKey: "senderId"
+})
 
 module.exports = User;

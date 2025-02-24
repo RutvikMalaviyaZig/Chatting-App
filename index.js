@@ -14,6 +14,10 @@ const bodyParser = require('body-parser');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+//
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+
 
 // middlewares
 app.use(express.json());
@@ -45,5 +49,13 @@ sequelize
 
 
 app.listen(PORT, (req, res) => {
+
+  io.on('connection',( socket) => {
+    socket.on("user-message", (message) => {
+      io.emit("message", message);
+    });
+  });
+
+  
   console.log(`server is listening at http://localhost:${PORT}`);
 });

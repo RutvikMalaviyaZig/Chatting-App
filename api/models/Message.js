@@ -58,7 +58,6 @@ const Message = sequelize.define(
   }
 );
 
-Message.belongsTo(Room, { foreignKey: "roomId" });
-Message.belongsTo(User, { foreignKey: "createdBy" });
+
 
 module.exports = Message;
